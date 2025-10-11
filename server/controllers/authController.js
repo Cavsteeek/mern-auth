@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import userModel from '../models/userModel.js';
 import transporter from '../config/nodeMailer.js';
+import userAuth from '../middleware/userAuth.js';
 
 
 // Register User
@@ -36,7 +37,7 @@ export const register = async (req, res) => {
         const mailOptions = {
             from: process.env.SENDER_EMAIL,
             to: email,
-            subject: "Welcome to Cavstek",
+            subject: "Welcome to Cavsteek",
             text: `Welcome to Cavsteek's Webstie. Your acount has been created with email id: ${email}`
         }
 
@@ -106,9 +107,9 @@ export const logout = async (req, res) => {
 // Send Verification OTP to the User's email
 export const sendVerifyOtp = async (req, res) => {
     try {
-        const { userId } = req.body;
+        // const { userId } = req.body;
 
-        const user = await userModel.findById(userId);
+        const user = await userModel.findById(req.userId);
 
         if (user.isAccountVerified) {
             return res.json({ success: false, message: "Account Already Verified" })
@@ -138,12 +139,15 @@ export const sendVerifyOtp = async (req, res) => {
 }
 
 export const verifyEmail = async (req, res) => {
-    const { userId, otp } = req.body;
+    const { otp } = req.body;
+    const userId = req.userId;
+
     if (!userId || !otp) {
         return res.json({ success: false, message: "Missing Details" })
     }
 
     try {
+
         const user = await userModel.findById(userId);
 
         if (!user) {
@@ -158,7 +162,7 @@ export const verifyEmail = async (req, res) => {
             return res.json({ success: false, message: "OTP Expired" })
         }
 
-        user.isAccountVerified = true;
+        user.isVerified = true;
         user.verifyOtp = '';
         user.verifyOtpExpireAt = 0;
 
@@ -170,3 +174,5 @@ export const verifyEmail = async (req, res) => {
         return res.json({ success: false, message: error.message })
     }
 }
+
+//
