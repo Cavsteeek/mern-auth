@@ -15,3 +15,4 @@ export const assets = {
     hand_wave,
     header_img
 }
+export default assets
