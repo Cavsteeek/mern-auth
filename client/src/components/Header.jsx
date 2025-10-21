@@ -1,7 +1,9 @@
 import React from 'react'
 import assets from '../assets/assets'
+import { useNavigate } from 'react-router-dom'
 
 function Header() {
+    const navigate = useNavigate()
   return (
     <div className='flex flex-col items-center mt-22 px-4 text-center text-gray-800'>
       <img src={assets.header_img} alt="" className='w-36 h-36 rounded-full mb-6'/>
