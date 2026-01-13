@@ -1,5 +1,4 @@
-/* eslint-disable no-undef */
-import { createContext } from "react";
+import { createContext, useState } from "react";
 
 export const AppContent = createContext()
 

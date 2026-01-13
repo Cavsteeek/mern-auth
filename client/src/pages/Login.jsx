@@ -1,11 +1,9 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-empty */
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import assets from '../assets/assets'
-import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AppContent } from '../context/AppContext'
 import axios from 'axios'
+import { toast } from 'react-toastify'
 
 const Login = () => {
 
@@ -20,7 +18,7 @@ const Login = () => {
 
   const onSubmitHandler = async (e) => {
     try {
-      e.preventDefault()
+      e.preventDefault();
 
       axios.defaults.withCredentials = true
 
@@ -31,14 +29,21 @@ const Login = () => {
           setIsLoggedin(true)
           navigate('/')
         } else {
-          alert(data.message)
+          toast.error(data.message)
         }
 
       } else {
+        const { data } = await axios.post(backendUrl + '/api/auth/login', { email, password })
 
+        if (data.success) {
+          setIsLoggedin(true)
+          navigate('/')
+        } else {
+          toast.error(data.message)
+        }
       }
     } catch (error) {
-
+      toast.error(data.message)
     }
   }
 
