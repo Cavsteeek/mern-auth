@@ -1,4 +1,7 @@
+
 import { createContext, useState } from "react";
+import axios from 'axios'
+import { toast } from 'react-toastify'
 
 export const AppContent = createContext()
 
@@ -7,10 +10,20 @@ export const AppContextProvider = (props) => {
     const [isLoggedin, setIsLoggedin] = useState(false);
     const [userData, setUserData] = useState(false);
 
+    const getUserData = async () => {
+        try {
+            const { data } = await axios.get(backendUrl + '/api/user/data')
+            data.success ? setUserData(data.userData) : toast.error(data.message);
+        } catch (error) {
+            toast.error(error.response?.data?.message);
+        }
+    }
+
     const value = {
         backendUrl,
         isLoggedin, setIsLoggedin,
-        userData, setUserData
+        userData, setUserData,
+        getUserData
     }
 
     return (
